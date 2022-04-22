@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.tco.store.mapper.StoreMapper">
+	<!-- * selectKey?
+	일련번호 처리
+	마이바티스는 쿼리 실행 시 파라미터를 치환해줌 
+	 -->
+	<!-- 지점의 매장 출고목록 뽑기 - 소비자판매 테이블에서 지점으로 걸러서 가져오기 -->
+	<select id="storeShipList" resultType="storeVO" parameterType="String">
+		SELECT C.CUST_NTSL_ID
+		      ,C.BRNCOFC_ID
+		      ,C.CUST_ID
+		      ,C.PROD_INFO_ID
+		      ,C.CUST_NTSL_DT
+		      ,C.CUST_NTSL_AMT
+		      ,C.CUST_NTSL_QTY
+		      ,P.PROD_INFO_PRCHS_AMT
+		      ,P.PROD_INFO_NM
+		      ,P.CMNCD_CD
+		      ,C.CMNCD_NM1
+		      ,C.CMNCD_NM2
+		      ,B.BRNCOFC_NM
+		 FROM  CUST_NTSL C, PROD_INFO P, CMNCD C, BRNCOFC B
+		WHERE  C.PROD_INFO_ID=P.PROD_INFO_ID
+		  AND  C.BRNCOFC_ID=B.BRNCOFC_ID
+		  AND  P.CMNCD_CD=C.CMNCD_CD
+		  AND  B.BRNCOFC_ID=#{brncofcId}
+		ORDER BY C.CUST_NTSL_ID DESC
+	</select>
+</mapper>

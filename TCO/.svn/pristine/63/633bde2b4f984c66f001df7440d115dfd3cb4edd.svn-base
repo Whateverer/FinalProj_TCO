@@ -1,0 +1,41 @@
+package kr.or.tco.store.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.tco.ordr.service.OrdrService;
+import kr.or.tco.store.service.StoreService;
+import kr.or.tco.strgstck.service.StrgstckService;
+import kr.or.tco.strgstck.vo.StrgstckVO;
+
+@RequestMapping("/wrhouse")
+@Controller
+public class StoreController {
+
+	@Autowired
+	StoreService storeService;
+	
+	@Autowired
+	OrdrService ordrService;
+	
+	@Autowired
+	StrgstckService strgstckService;
+	
+	//지점의 입고 목록
+	@GetMapping("/branchWrhouseList")
+	public String branchWrhouseList(Model model, String brncofcId) {
+		//지점 이름 가져오기
+		String brnNm = this.ordrService.brnofcNm(brncofcId);
+		//지점의 매장입고 목록(=창고출고)
+		List<StrgstckVO> list = this.strgstckService.branchShipList(brncofcId);
+		
+		model.addAttribute("name", brnNm);
+		model.addAttribute("list", list);
+		return "warehousing/branchWrhouseList";
+	}
+}

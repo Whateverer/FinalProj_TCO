@@ -1,0 +1,23 @@
+package kr.or.tco.util.mapper;
+
+import java.util.List;
+
+import kr.or.tco.util.vo.CalendarVO;
+
+public interface CalendarMapper {
+	
+	/**
+	 * 달력 - 저장된 일정들을 불러온다
+	 * @return
+	 */
+	public List<CalendarVO>schedulelist();
+	
+	
+	/**
+	 * 달력 - 일정을 저장한다.
+	 * @param calendarVO
+	 * @return 결과값 성공은 0이상 0은 실패
+	 */
+	public int insertschedule (CalendarVO calendarVO);	
+	
+}

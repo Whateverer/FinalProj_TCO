@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.or.tco.util.mapper.CalendarMapper">
+	<resultMap type="calendarVO" id="calendarMap">
+		<id property="calendarNo" column="CALENDAR_NO"></id>
+		<result property="title" column="TITLE"/>
+		<result property="content" column="CONTENT"/>
+		<result property="startday" column="STARTDAY"/>
+		<result property="endday" column="ENDDAY"/>
+		<result property="eventCon" column="EVENT_CON"/>
+	</resultMap>
+	
+	<select id="schedulelist" resultMap="calendarMap">
+		SELECT CALENDAR_NO,TITLE,CONTENT,STARTDAY,ENDDAY,EVENT_CON FROM CALENDAR
+	</select>
+	
+
+	<insert id="insertschedule" parameterType="String">
+		INSERT 
+		  INTO CALENDAR(TITLE,CONTENT,STARTDAY,ENDDAY) 
+		VALUES (#{title},#{content},#{startday},#{endday})
+		 WHERE 1=1
+	</insert>
+
+
+</mapper>

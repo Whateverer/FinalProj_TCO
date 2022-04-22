@@ -1,0 +1,52 @@
+package kr.or.tco.util.controller;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
+@RequestMapping("/calendar")
+@Controller
+public class CalendarController {
+	
+	private static final Logger logger =
+			LoggerFactory.getLogger(CalendarController.class);
+	
+	@GetMapping("/main")
+	public String calendarMain() {
+		return "calendar/main";
+	}
+	
+	
+	@RequestMapping(value="/insertSchedule")
+	public void insertSchedule(@RequestBody List<Map<String, Object>>param) throws Exception {
+		
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.KOREA);
+		
+		for (int i = 0; i < param.size(); i++) {
+			 
+            String username = (String) param.get(i).get("title");
+            String startDateString = (String) param.get(i).get("start");
+            String endDateString = (String) param.get(i).get("end");
+            
+            logger.info("유저"+username+"스타트"+startDateString+"종료"+endDateString);
+            
+            LocalDateTime startDate = LocalDateTime.parse(startDateString, dateTimeFormatter);
+            LocalDateTime endDate = LocalDateTime.parse(endDateString, dateTimeFormatter);
+ 
+            
+        }
+	}
+	
+
+}

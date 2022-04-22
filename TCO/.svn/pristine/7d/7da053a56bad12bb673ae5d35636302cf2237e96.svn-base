@@ -1,0 +1,92 @@
+package kr.or.tco.store.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.tco.ordr.service.OrdrService;
+import kr.or.tco.store.service.StoreService;
+import kr.or.tco.store.vo.StoreVO;
+import kr.or.tco.strgstck.controller.StrgstckController;
+import kr.or.tco.strgstck.service.StrgstckService;
+import kr.or.tco.strgstck.vo.StrgstckVO;
+
+@RequestMapping("/store")
+@Controller
+public class StoreController {
+	private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
+
+	@Autowired
+	StoreService storeService;
+	
+	@Autowired
+	OrdrService ordrService;
+	
+	@Autowired
+	StrgstckService strgstckService;
+	
+	//지점의 입고 목록
+	@GetMapping("/branchWrhouseList")
+	public String branchWrhouseList(Model model, String brncofcId) {
+		//지점 이름 가져오기
+		String brnNm = this.ordrService.brnofcNm(brncofcId);
+		//지점의 매장입고 목록(=창고출고)
+		List<StrgstckVO> list = this.strgstckService.branchShipList(brncofcId);
+		//지점의 창고입고 목록
+		List<StrgstckVO> strgList = this.strgstckService.branchWrHouseList(brncofcId);
+		
+		model.addAttribute("name", brnNm);
+		model.addAttribute("list", list);
+		model.addAttribute("strgList", strgList);
+		return "store/branchWrhouseList";
+	}
+	
+	//지점의 부족재고현황
+	@GetMapping("/lackStock")
+	public String lackStock(Model model, String brncofcId) {
+		//지점 이름 가져오기
+		String brnNm = this.ordrService.brnofcNm(brncofcId);
+		
+		//지점의 매장 부족재고 현황을 뽑기 위한 테이블 만들기(지점의 모든 제품 현황임)
+		List<StoreVO> shopList = this.storeService.storeLackList(brncofcId);
+		//지점의 창고 부족재고 현황뽑기(지점의 모든 제품 현황)
+		List<StrgstckVO> strgList = this.strgstckService.strgLackList(brncofcId);
+		
+		model.addAttribute("id", brncofcId);
+		model.addAttribute("name", brnNm);
+		model.addAttribute("shopList", shopList);
+		model.addAttribute("strgList", strgList);
+		
+		return "store/branchLackStock";
+	}
+	
+	//매장 - 부족재고현황 새로가져오기
+	@ResponseBody
+	@PostMapping("/newLack.do")
+	public List<StoreVO> newLack(String id){
+		logger.info("지점 아이디 : " + id);
+		
+		//지점의 매장 부족재고 현황을 뽑기 위한 테이블 만들기(지점의 모든 제품 현황임)
+		List<StoreVO> shopList = this.storeService.storeLackList(id);
+		
+		return shopList;
+	}
+	
+	//창고 - 부족재고현황 새로가져오기
+	@ResponseBody
+	@PostMapping("/newLackStrg.do")
+	public List<StrgstckVO> newLackStrg(String id){
+		//지점의 창고 부족재고 현황뽑기(지점의 모든 제품 현황)
+		List<StrgstckVO> strgList = this.strgstckService.strgLackList(id);
+
+		return strgList;
+	}
+}

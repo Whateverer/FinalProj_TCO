@@ -1,0 +1,23 @@
+package kr.or.tco.store.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.or.tco.store.mapper.StoreMapper;
+import kr.or.tco.store.service.StoreService;
+import kr.or.tco.store.vo.StoreVO;
+
+@Service
+public class StoreServiceImpl implements StoreService {
+	
+	@Autowired
+	StoreMapper storeMapper;
+	
+	//지점의 매장 출고목록 뽑기 - 소비자판매 테이블에서 지점으로 걸러서 가져오기
+	@Override
+	public List<StoreVO> storeShipList(String brncofcId){
+		return this.storeMapper.storeShipList(brncofcId);
+	}
+}

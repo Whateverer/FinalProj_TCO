@@ -1,0 +1,59 @@
+package kr.or.tco.prchs.vo;
+
+import java.util.Date;
+
+
+/**
+ * 매입 VO
+ * @author 김영훈
+ * 매입에 관한 모든 것
+ */
+public class PrchsVO {
+		
+	public String prchsId;
+	public Date prchsDt;
+	public int prchsAmt;
+	public String cnptId;
+	public String prchsSe;
+	
+	
+	public String getPrchsId() {
+		return prchsId;
+	}
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
+	}
+	public Date getPrchsDt() {
+		return prchsDt;
+	}
+	public void setPrchsDt(Date prchsDt) {
+		this.prchsDt = prchsDt;
+	}
+	public int getPrchsAmt() {
+		return prchsAmt;
+	}
+	public void setPrchsAmt(int prchsAmt) {
+		this.prchsAmt = prchsAmt;
+	}
+	public String getCnptId() {
+		return cnptId;
+	}
+	public void setCnptId(String cnptId) {
+		this.cnptId = cnptId;
+	}
+	public String getPrchsSe() {
+		return prchsSe;
+	}
+	public void setPrchsSe(String prchsSe) {
+		this.prchsSe = prchsSe;
+	}
+	@Override
+	public String toString() {
+		return "PrchsVO [prchsId=" + prchsId + ", prchsDt=" + prchsDt + ", prchsAmt=" + prchsAmt + ", cnptId=" + cnptId
+				+ ", prchsSe=" + prchsSe + "]";
+	}
+	
+	
+	
+	
+}

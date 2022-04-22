@@ -1,0 +1,114 @@
+package kr.or.tco.util.controller;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import kr.or.tco.util.service.CalendarService;
+import kr.or.tco.util.vo.CalendarVO;
+
+@RequestMapping("/calendar")
+@Controller
+public class CalendarController {
+	
+	@Autowired
+	CalendarService calendarService;
+	
+	private static final Logger logger =
+			LoggerFactory.getLogger(CalendarController.class);
+	
+	/**
+	 * 달력 - 메인화면 출력
+	 * @return
+	 */
+	@RequestMapping(value = "/main",method = RequestMethod.GET)
+	public String calendarMain() {
+		return "calendar/main";
+	}
+	
+	/**
+	 * 달력 - 일정 조회
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/main",method = RequestMethod.POST)
+	public String calendarList() {
+		
+		List<CalendarVO>list = calendarService.schedulelist();
+		
+		Gson gson = new Gson();
+		JsonArray jarray = new JsonArray();
+		
+		Iterator<CalendarVO> it = list.iterator();
+		while(it.hasNext()) {
+			CalendarVO calendarVO = it.next();
+			JsonObject object = new JsonObject();
+			
+			String title = calendarVO.getTitle();
+			String content = calendarVO.getContent();
+			String startday = calendarVO.getStartday();
+			String endday = calendarVO.getEndday();
+			String eventcon = calendarVO.getEventCon();
+			
+			object.addProperty("title", title);
+			object.addProperty("content", content);
+			object.addProperty("startday", startday);
+			object.addProperty("endday", endday);
+			object.addProperty("eventcon", eventcon);
+			
+			jarray.add(object);
+		}
+		String json = gson.toJson(jarray);
+		logger.info("달력조회 : "+json);
+		
+		return json;
+	}
+	
+	
+	
+	
+	/**
+	 * 달력 - 일정 추가
+	 * @param param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/insertSchedule")
+	public void insertSchedule(@RequestBody List<Map<String, Object>>param) throws Exception {
+		
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.KOREA);
+		
+		for (int i = 0; i < param.size(); i++) {
+			 
+            String username = (String) param.get(i).get("title");
+            String startDateString = (String) param.get(i).get("start");
+            String endDateString = (String) param.get(i).get("end");
+            
+            logger.info("일정명: "+username+" 시작일: "+startDateString+" 종료일: "+endDateString);
+            
+            LocalDateTime startDate = LocalDateTime.parse(startDateString, dateTimeFormatter);
+            LocalDateTime endDate = LocalDateTime.parse(endDateString, dateTimeFormatter);
+ 
+            
+        }
+	}
+	
+
+}

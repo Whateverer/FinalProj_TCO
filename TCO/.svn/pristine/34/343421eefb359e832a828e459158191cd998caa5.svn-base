@@ -1,0 +1,15 @@
+package kr.or.tco.util.service;
+
+import java.util.List;
+
+import kr.or.tco.util.vo.CalendarVO;
+
+public interface CalendarService {
+	
+	/**
+	 * 달력 - 일정조회
+	 * @return 일정이 담긴 list값
+	 */
+	public List<CalendarVO>schedulelist();
+
+}
